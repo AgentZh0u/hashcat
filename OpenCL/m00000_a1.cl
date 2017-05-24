@@ -3,7 +3,7 @@
  * License.....: MIT
  */
 
-#define NEW_SIMD_CODE
+//#define NEW_SIMD_CODE
 
 #include "inc_vendor.cl"
 #include "inc_hash_constants.h"
@@ -51,7 +51,9 @@ __kernel void m00000_s04 (__global pw_t *pws, __global const kernel_rule_t *rule
   ctx_outer.w0[2] = pw.i[2];
   ctx_outer.w0[3] = pw.i[3];
 
-  ctx_outer.len = pw.pw_len & 0xf;
+  ctx_outer.len = pw.pw_len & 15;
+
+  md5_optimize_max_length (&ctx_outer, 4);
 
   /**
    * digest
@@ -85,9 +87,9 @@ __kernel void m00000_s04 (__global pw_t *pws, __global const kernel_rule_t *rule
     t0[2] = comb.i[2];
     t0[3] = comb.i[3];
 
-    md5_update_64 (&ctx_inner, t0, t1, t2, t3, comb.pw_len & 0xf);
+    md5_update_64 (&ctx_inner, t0, t1, t2, t3, comb.pw_len);
 
-    ctx_inner.len &= 0x1f;
+    md5_optimize_max_length (&ctx_inner, 5);
 
     md5_final (&ctx_inner);
 

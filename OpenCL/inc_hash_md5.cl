@@ -3,6 +3,7 @@
 // input buf unused bytes needs to be set to zero
 // input buf need to be in algorithm native byte order (md5 = LE, sha1 = BE, etc)
 // input buf need to be 64 byte aligned when usin md5_update()
+// while input buf can be a vector datatype, the length of the different elements can not
 
 typedef struct md5_ctx
 {
@@ -270,7 +271,7 @@ void md5_update (md5_ctx_t *md5_ctx, const u32x *w, const int len)
 
 void md5_final (md5_ctx_t *md5_ctx)
 {
-  int pos = md5_ctx->len & 0x3f;
+  const int pos = md5_ctx->len & 0x3f;
 
   append_0x80_4x4 (md5_ctx->w0, md5_ctx->w1, md5_ctx->w2, md5_ctx->w3, pos);
 
@@ -299,4 +300,9 @@ void md5_final (md5_ctx_t *md5_ctx)
   md5_ctx->w3[2] = md5_ctx->len * 8;
 
   md5_transform (md5_ctx->w0, md5_ctx->w1, md5_ctx->w2, md5_ctx->w3, md5_ctx->h);
+}
+
+void md5_optimize_max_length (md5_ctx_t *md5_ctx, const int bits)
+{
+  md5_ctx->len &= (1 << bits) - 1;
 }
