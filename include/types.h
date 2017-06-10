@@ -347,39 +347,41 @@ typedef enum opti_type
 
 typedef enum opts_type
 {
-  OPTS_TYPE_PT_UNICODE        = (1ULL <<  0),
-  OPTS_TYPE_PT_UPPER          = (1ULL <<  1),
-  OPTS_TYPE_PT_LOWER          = (1ULL <<  2),
-  OPTS_TYPE_PT_ADD01          = (1ULL <<  3),
-  OPTS_TYPE_PT_ADD02          = (1ULL <<  4),
-  OPTS_TYPE_PT_ADD80          = (1ULL <<  5),
-  OPTS_TYPE_PT_ADDBITS14      = (1ULL <<  6),
-  OPTS_TYPE_PT_ADDBITS15      = (1ULL <<  7),
-  OPTS_TYPE_PT_GENERATE_LE    = (1ULL <<  8),
-  OPTS_TYPE_PT_GENERATE_BE    = (1ULL <<  9),
-  OPTS_TYPE_PT_NEVERCRACK     = (1ULL << 10), // if we want all possible results
-  OPTS_TYPE_PT_BITSLICE       = (1ULL << 11),
-  OPTS_TYPE_PT_ALWAYS_ASCII   = (1ULL << 12),
-  OPTS_TYPE_ST_UNICODE        = (1ULL << 13),
-  OPTS_TYPE_ST_UPPER          = (1ULL << 14),
-  OPTS_TYPE_ST_LOWER          = (1ULL << 15),
-  OPTS_TYPE_ST_ADD01          = (1ULL << 16),
-  OPTS_TYPE_ST_ADD02          = (1ULL << 17),
-  OPTS_TYPE_ST_ADD80          = (1ULL << 18),
-  OPTS_TYPE_ST_ADDBITS14      = (1ULL << 19),
-  OPTS_TYPE_ST_ADDBITS15      = (1ULL << 20),
-  OPTS_TYPE_ST_GENERATE_LE    = (1ULL << 21),
-  OPTS_TYPE_ST_GENERATE_BE    = (1ULL << 22),
-  OPTS_TYPE_ST_HEX            = (1ULL << 23),
-  OPTS_TYPE_ST_BASE64         = (1ULL << 24),
-  OPTS_TYPE_ST_HASH_MD5       = (1ULL << 25),
-  OPTS_TYPE_HASH_COPY         = (1ULL << 26),
-  OPTS_TYPE_HASH_SPLIT        = (1ULL << 27),
-  OPTS_TYPE_HOOK12            = (1ULL << 28),
-  OPTS_TYPE_HOOK23            = (1ULL << 29),
-  OPTS_TYPE_INIT2             = (1ULL << 30),
-  OPTS_TYPE_LOOP2             = (1ULL << 31),
-  OPTS_TYPE_BINARY_HASHFILE   = (1ULL << 32),
+  OPTS_TYPE_PT_UTF16LE        = (1ULL <<  0),
+  OPTS_TYPE_PT_UTF16BE        = (1ULL <<  1),
+  OPTS_TYPE_PT_UPPER          = (1ULL <<  2),
+  OPTS_TYPE_PT_LOWER          = (1ULL <<  3),
+  OPTS_TYPE_PT_ADD01          = (1ULL <<  4),
+  OPTS_TYPE_PT_ADD02          = (1ULL <<  5),
+  OPTS_TYPE_PT_ADD80          = (1ULL <<  6),
+  OPTS_TYPE_PT_ADDBITS14      = (1ULL <<  7),
+  OPTS_TYPE_PT_ADDBITS15      = (1ULL <<  8),
+  OPTS_TYPE_PT_GENERATE_LE    = (1ULL <<  9),
+  OPTS_TYPE_PT_GENERATE_BE    = (1ULL << 10),
+  OPTS_TYPE_PT_NEVERCRACK     = (1ULL << 11), // if we want all possible results
+  OPTS_TYPE_PT_BITSLICE       = (1ULL << 12),
+  OPTS_TYPE_PT_ALWAYS_ASCII   = (1ULL << 13),
+  OPTS_TYPE_ST_UTF16LE        = (1ULL << 14),
+  OPTS_TYPE_ST_UTF16BE        = (1ULL << 15),
+  OPTS_TYPE_ST_UPPER          = (1ULL << 16),
+  OPTS_TYPE_ST_LOWER          = (1ULL << 17),
+  OPTS_TYPE_ST_ADD01          = (1ULL << 18),
+  OPTS_TYPE_ST_ADD02          = (1ULL << 19),
+  OPTS_TYPE_ST_ADD80          = (1ULL << 20),
+  OPTS_TYPE_ST_ADDBITS14      = (1ULL << 21),
+  OPTS_TYPE_ST_ADDBITS15      = (1ULL << 22),
+  OPTS_TYPE_ST_GENERATE_LE    = (1ULL << 23),
+  OPTS_TYPE_ST_GENERATE_BE    = (1ULL << 24),
+  OPTS_TYPE_ST_HEX            = (1ULL << 25),
+  OPTS_TYPE_ST_BASE64         = (1ULL << 26),
+  OPTS_TYPE_ST_HASH_MD5       = (1ULL << 27),
+  OPTS_TYPE_HASH_COPY         = (1ULL << 28),
+  OPTS_TYPE_HASH_SPLIT        = (1ULL << 29),
+  OPTS_TYPE_HOOK12            = (1ULL << 30),
+  OPTS_TYPE_HOOK23            = (1ULL << 31),
+  OPTS_TYPE_INIT2             = (1ULL << 32),
+  OPTS_TYPE_LOOP2             = (1ULL << 33),
+  OPTS_TYPE_BINARY_HASHFILE   = (1ULL << 34),
 
 } opts_type_t;
 
@@ -666,27 +668,7 @@ typedef enum user_options_map
  * structs
  */
 
-typedef struct
-{
-  u64 h[8];
-  u64 t[2];
-  u64 f[2];
-  u32 buflen;
-  u32 outlen;
-  u8  last_node;
-
-} blake2_t;
-
-typedef struct
-{
-  u32 iv[2];
-  u32 plain[2];
-  u32 position[2];
-  u32 offset;
-
-} chacha20_t;
-
-typedef struct
+typedef struct salt
 {
   u32 salt_buf[64];
   u32 salt_buf_pc[64];
@@ -1675,7 +1657,7 @@ typedef struct cpt_ctx
 
 } cpt_ctx_t;
 
-typedef struct
+typedef struct device_info
 {
   bool    skipped_dev;
   double  hashes_msec_dev;
@@ -1691,7 +1673,7 @@ typedef struct
 
 } device_info_t;
 
-typedef struct
+typedef struct hashcat_status
 {
   const char *hash_target;
   char       *hash_type;
@@ -1853,6 +1835,8 @@ typedef struct cache_generate
   u64 comp;
   u64 cnt;
   u64 cnt2;
+
+  time_t runtime;
 
 } cache_generate_t;
 

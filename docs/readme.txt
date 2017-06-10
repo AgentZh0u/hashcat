@@ -1,8 +1,8 @@
-hashcat v3.5.0
+hashcat v3.6.0
 ==============
 
 AMD GPUs on Windows require "AMD Radeon Software Crimson Edition" (15.12 or later)
-AMD GPUs on Linux require "AMDGPU-Pro Driver" (16.40 or later)
+AMD GPUs on Linux require "AMDGPU-PRO Driver" (16.40 or later)
 Intel CPUs require "OpenCL Runtime for Intel Core and Intel Xeon Processors" (16.1.1 or later)
 Intel GPUs on Windows require "OpenCL Driver for Intel Iris and Intel HD Graphics"
 Intel GPUs on Linux require "OpenCL 2.0 GPU Driver Package for Linux" (2.0 or later)
@@ -46,14 +46,14 @@ NVIDIA GPUs require "NVIDIA Driver" (367.x or later)
 - SHA-384
 - SHA-512
 - SHA-3 (Keccak)
-- Blake2b-512
+- BLAKE2b-512
 - SipHash
 - Skip32
 - RIPEMD-160
 - Whirlpool
 - DES (PT = $salt, key = $pass)
 - 3DES (PT = $salt, key = $pass)
-- Chacha20
+- ChaCha20
 - GOST R 34.11-94
 - GOST R 34.11-2012 (Streebog) 256-bit
 - GOST R 34.11-2012 (Streebog) 512-bit
@@ -222,6 +222,9 @@ NVIDIA GPUs require "NVIDIA Driver" (367.x or later)
 - Password Safe v2
 - Password Safe v3
 - KeePass 1 (AES/Twofish) and KeePass 2 (AES)
+- JKS Java Key Store Private Keys (SHA1)
+- Ethereum Wallet, PBKDF2-HMAC-SHA256
+- Ethereum Wallet, SCRYPT
 - eCryptfs
 - Android FDE <= 4.3
 - Android FDE (Samsung DEK)

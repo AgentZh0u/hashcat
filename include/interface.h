@@ -129,21 +129,25 @@ typedef struct itunes_backup
 
 } itunes_backup_t;
 
-typedef struct luks_tmp
+typedef struct blake2
 {
-  u32 ipad32[8];
-  u64 ipad64[8];
+  u64 h[8];
+  u64 t[2];
+  u64 f[2];
+  u32 buflen;
+  u32 outlen;
+  u8  last_node;
 
-  u32 opad32[8];
-  u64 opad64[8];
+} blake2_t;
 
-  u32 dgst32[32];
-  u64 dgst64[16];
+typedef struct chacha20
+{
+  u32 iv[2];
+  u32 plain[2];
+  u32 position[2];
+  u32 offset;
 
-  u32 out32[32];
-  u64 out64[16];
-
-} luks_tmp_t;
+} chacha20_t;
 
 typedef struct rar5
 {
@@ -440,6 +444,47 @@ typedef struct dpapimk
   u32 contents[128];
 
 } dpapimk_t;
+
+typedef struct jks_sha1
+{
+  u32 checksum[5];
+  u32 iv[5];
+  u32 enc_key_buf[4096];
+  u32 enc_key_len;
+  u32 der[5];
+  u32 alias[16];
+
+} jks_sha1_t;
+
+typedef struct ethereum_pbkdf2
+{
+  u32 salt_buf[16];
+  u32 ciphertext[8];
+
+} ethereum_pbkdf2_t;
+
+typedef struct ethereum_scrypt
+{
+  u32 salt_buf[16];
+  u32 ciphertext[8];
+
+} ethereum_scrypt_t;
+
+typedef struct luks_tmp
+{
+  u32 ipad32[8];
+  u64 ipad64[8];
+
+  u32 opad32[8];
+  u64 opad64[8];
+
+  u32 dgst32[32];
+  u64 dgst64[16];
+
+  u32 out32[32];
+  u64 out64[16];
+
+} luks_tmp_t;
 
 typedef struct pdf14_tmp
 {
@@ -1228,6 +1273,12 @@ typedef enum display_len
   DISPLAY_LEN_MAX_15300 =  1 + 7 + 1 + 1 + 1 + 1 + 1 + 100 + 1 + 6 + 1 + 6 + 1 + 10 + 1 + 32 + 1 + 4 + 1 + 512,
   DISPLAY_LEN_MIN_15400 = 10 + 1 + 16 + 1 + 1 + 1 + 16 + 1 + 16 + 1 + 16,
   DISPLAY_LEN_MAX_15400 = 10 + 1 + 16 + 1 + 2 + 1 + 16 + 1 + 16 + 1 + 16,
+  DISPLAY_LEN_MIN_15500 = 10 + 1 + 40 + 1 + 40 + 1 +     1 + 1 + 2 + 1 + 28 + 1 +  1,
+  DISPLAY_LEN_MAX_15500 = 10 + 1 + 40 + 1 + 40 + 1 + 16384 + 1 + 2 + 1 + 28 + 1 + 64,
+  DISPLAY_LEN_MIN_15600 = 11 + 1 + 1 + 1 + 32 + 1 + 64 + 1 + 64,
+  DISPLAY_LEN_MAX_15600 = 11 + 1 + 6 + 1 + 64 + 1 + 64 + 1 + 64,
+  DISPLAY_LEN_MIN_15700 = 11 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 64 + 1 + 64 + 1 + 64,
+  DISPLAY_LEN_MAX_15700 = 11 + 1 + 6 + 1 + 1 + 1 + 1 + 1 + 64 + 1 + 64 + 1 + 64,
   DISPLAY_LEN_MIN_99999 = 1,
   DISPLAY_LEN_MAX_99999 = 55,
 
@@ -1369,6 +1420,7 @@ typedef enum hash_type
   HASH_TYPE_BLAKE2B             = 59,
   HASH_TYPE_CHACHA20            = 60,
   HASH_TYPE_DPAPIMK             = 61,
+  HASH_TYPE_JKS_SHA1            = 62,
 
 } hash_type_t;
 
@@ -1560,6 +1612,9 @@ typedef enum kern_type
   KERN_TYPE_NETBSD_SHA1CRYPT        = 15100,
   KERN_TYPE_DPAPIMK                 = 15300,
   KERN_TYPE_CHACHA20                = 15400,
+  KERN_TYPE_JKS_SHA1                = 15500,
+  KERN_TYPE_ETHEREUM_PBKDF2         = 15600,
+  KERN_TYPE_ETHEREUM_SCRYPT         = 15700,
   KERN_TYPE_PLAINTEXT               = 99999,
 
 } kern_type_t;
@@ -1631,6 +1686,7 @@ typedef enum rounds_count
    ROUNDS_ATLASSIAN          = 10000,
    ROUNDS_NETBSD_SHA1CRYPT   = 20000,
    ROUNDS_DPAPIMK            = 24000 - 1, // from 4000 to 24000 (possibly more)
+   ROUNDS_ETHEREUM_PBKDF2    = 262144 - 1,
    ROUNDS_STDOUT             = 0
 
 } rounds_count_t;
@@ -1811,6 +1867,9 @@ int filezilla_server_parse_hash   (u8 *input_buf, u32 input_len, hash_t *hash_bu
 int netbsd_sha1crypt_parse_hash   (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNUSED const hashconfig_t *hashconfig);
 int atlassian_parse_hash          (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNUSED const hashconfig_t *hashconfig);
 int dpapimk_parse_hash            (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNUSED const hashconfig_t *hashconfig);
+int jks_sha1_parse_hash           (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNUSED const hashconfig_t *hashconfig);
+int ethereum_pbkdf2_parse_hash    (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNUSED const hashconfig_t *hashconfig);
+int ethereum_scrypt_parse_hash    (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNUSED const hashconfig_t *hashconfig);
 
 /**
  * hook functions

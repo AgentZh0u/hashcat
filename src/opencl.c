@@ -73,7 +73,7 @@ static int ocl_check_dri (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
 
   if (vendor != 4098) return 0;
 
-  // Now the problem is only with AMDGPU-Pro, not with oldschool AMD driver
+  // Now the problem is only with AMDGPU-PRO, not with oldschool AMD driver
 
   char buf[HCBUFSIZ_TINY];
 
@@ -415,7 +415,7 @@ int ocl_init (hashcat_ctx_t *hashcat_ctx)
 
     #if defined (__linux__)
     event_log_warning (hashcat_ctx, "* AMD GPUs on Linux require this runtime and/or driver:");
-    event_log_warning (hashcat_ctx, "  \"AMDGPU-Pro Driver\" (16.40 or later)");
+    event_log_warning (hashcat_ctx, "  \"AMDGPU-PRO Driver\" (16.40 or later)");
     #elif defined (_WIN)
     event_log_warning (hashcat_ctx, "* AMD GPUs on Windows require this runtime and/or driver:");
     event_log_warning (hashcat_ctx, "  \"AMD Radeon Software Crimson Edition\" (15.12 or later)");
@@ -2181,7 +2181,7 @@ int opencl_ctx_init (hashcat_ctx_t *hashcat_ctx)
   if (rc_ocl_init == -1) return -1;
 
   /**
-   * Some permission pre-check, because AMDGPU-Pro Driver crashes if the user has no permission to do this
+   * Some permission pre-check, because AMDGPU-PRO Driver crashes if the user has no permission to do this
    */
 
   const int rc_ocl_check = ocl_check_dri (hashcat_ctx);
@@ -2265,7 +2265,7 @@ int opencl_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
     #if defined (__linux__)
     event_log_warning (hashcat_ctx, "* AMD GPUs on Linux require this runtime and/or driver:");
-    event_log_warning (hashcat_ctx, "  \"AMDGPU-Pro Driver\" (16.40 or later)");
+    event_log_warning (hashcat_ctx, "  \"AMDGPU-PRO Driver\" (16.40 or later)");
     #elif defined (_WIN)
     event_log_warning (hashcat_ctx, "* AMD GPUs on Windows require this runtime and/or driver:");
     event_log_warning (hashcat_ctx, "  \"AMD Radeon Software Crimson Edition\" (15.12 or later)");
@@ -2595,6 +2595,10 @@ int opencl_ctx_devices_init (hashcat_ctx_t *hashcat_ctx, const int comptime)
       if (CL_rc == -1) return -1;
 
       device_param->device_name = device_name;
+
+      hc_string_trim_leading (device_param->device_name);
+
+      hc_string_trim_trailing (device_param->device_name);
 
       // device_vendor
 
@@ -3100,13 +3104,13 @@ int opencl_ctx_devices_init (hashcat_ctx_t *hashcat_ctx, const int comptime)
               bool amd_warn = true;
 
               #if defined (__linux__)
-              // AMDGPU-Pro Driver 16.40 and higher
+              // AMDGPU-PRO Driver 16.40 and higher
               if (atoi (device_param->driver_version) >= 2117) amd_warn = false;
-              // AMDGPU-Pro Driver 16.50 is known to be broken
+              // AMDGPU-PRO Driver 16.50 is known to be broken
               if (atoi (device_param->driver_version) == 2236) amd_warn = true;
-              // AMDGPU-Pro Driver 16.60 is known to be broken
+              // AMDGPU-PRO Driver 16.60 is known to be broken
               if (atoi (device_param->driver_version) == 2264) amd_warn = true;
-              // AMDGPU-Pro Driver 17.10 is known to be broken
+              // AMDGPU-PRO Driver 17.10 is known to be broken
               if (atoi (device_param->driver_version) == 2348) amd_warn = true;
               #elif defined (_WIN)
               // AMD Radeon Software 14.9 and higher, should be updated to 15.12
@@ -3408,6 +3412,10 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
   {
     opencl_ctx->force_jit_compilation = 8900;
   }
+  else if (hashconfig->hash_mode == 15700)
+  {
+    opencl_ctx->force_jit_compilation = 15700;
+  }
   else if (hashconfig->hash_mode == 1500 && user_options->attack_mode == ATTACK_MODE_BF && hashes->salts_cnt == 1)
   {
     opencl_ctx->force_jit_compilation = 1500;
@@ -3652,7 +3660,7 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
 
     size_t size_scrypt = 4;
 
-    if ((hashconfig->hash_mode == 8900) || (hashconfig->hash_mode == 9300))
+    if ((hashconfig->hash_mode == 8900) || (hashconfig->hash_mode == 9300) || (hashconfig->hash_mode == 15700))
     {
       // we need to check that all hashes have the same scrypt settings
 
@@ -3677,11 +3685,12 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
       hashconfig->tmp_size = scrypt_tmp_size;
 
       u32 tmto_start = 0;
-      u32 tmto_stop  = 10;
+      u32 tmto_stop  = 6;
 
       if (user_options->scrypt_tmto)
       {
         tmto_start = user_options->scrypt_tmto;
+        tmto_stop  = user_options->scrypt_tmto;
       }
       else
       {
@@ -3711,9 +3720,6 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
           }
         }
       }
-
-      device_param->kernel_accel_min = 1;
-      device_param->kernel_accel_max = 8;
 
       const u32 kernel_power_max = device_param->hardware_power * device_param->kernel_accel_max;
 
@@ -3756,9 +3762,11 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
         + size_tm
         + size_tmps;
 
+      bool not_enough_memory = true;
+
       u32 tmto;
 
-      for (tmto = tmto_start; tmto < tmto_stop; tmto++)
+      for (tmto = tmto_start; tmto <= tmto_stop; tmto++)
       {
         size_scrypt = (128 * scrypt_r) * scrypt_N;
 
@@ -3785,12 +3793,14 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
           scrypt_tmto_final = tmto;
         }
 
+        not_enough_memory = false;
+
         break;
       }
 
-      if (tmto == tmto_stop)
+      if (not_enough_memory == true)
       {
-        event_log_error (hashcat_ctx, "Cannot allocate enough device memory.");
+        event_log_error (hashcat_ctx, "Cannot allocate enough device memory. Perhaps retry with -n 1.");
 
         return -1;
       }
@@ -4145,7 +4155,7 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
         {
           snprintf (build_opts_update, sizeof (build_opts_update) - 1, "%s -DDESCRYPT_SALT=%u", build_opts, hashes->salts_buf[0].salt_buf[0]);
         }
-        else if (opencl_ctx->force_jit_compilation == 8900)
+        else if ((opencl_ctx->force_jit_compilation == 8900) || (opencl_ctx->force_jit_compilation == 15700))
         {
           snprintf (build_opts_update, sizeof (build_opts_update) - 1, "%s -DSCRYPT_N=%u -DSCRYPT_R=%u -DSCRYPT_P=%u -DSCRYPT_TMTO=%u -DSCRYPT_TMP_ELEM=%u", build_opts, hashes->salts_buf[0].scrypt_N, hashes->salts_buf[0].scrypt_r, hashes->salts_buf[0].scrypt_p, 1u << scrypt_tmto_final, scrypt_tmp_size / 16);
         }

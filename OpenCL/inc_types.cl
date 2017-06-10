@@ -666,13 +666,13 @@ inline u32 amd_bytealign_S (const u32 a, const u32 b, const u32 c)
 
 #endif
 
-typedef struct
+typedef struct digest
 {
   u32 digest_buf[DGST_ELEM];
 
 } digest_t;
 
-typedef struct
+typedef struct salt
 {
   u32 salt_buf[64];
   u32 salt_buf_pc[64];
@@ -752,7 +752,7 @@ typedef struct itunes_backup
 
 } itunes_backup_t;
 
-typedef struct
+typedef struct blake2
 {
   u64 h[8];
   u64 t[2];
@@ -763,22 +763,6 @@ typedef struct
 
 } blake2_t;
 
-typedef struct luks_tmp
-{
-  u32 ipad32[8];
-  u64 ipad64[8];
-
-  u32 opad32[8];
-  u64 opad64[8];
-
-  u32 dgst32[32];
-  u64 dgst64[16];
-
-  u32 out32[32];
-  u64 out64[16];
-
-} luks_tmp_t;
-
 typedef struct chacha20
 {
   u32 iv[2];
@@ -788,24 +772,24 @@ typedef struct chacha20
 
 } chacha20_t;
 
-typedef struct
+typedef struct pdf
 {
-  int V;
-  int R;
-  int P;
+  int  V;
+  int  R;
+  int  P;
 
-  int enc_md;
+  int  enc_md;
 
-  u32 id_buf[8];
-  u32 u_buf[32];
-  u32 o_buf[32];
+  u32  id_buf[8];
+  u32  u_buf[32];
+  u32  o_buf[32];
 
-  int id_len;
-  int o_len;
-  int u_len;
+  int  id_len;
+  int  o_len;
+  int  u_len;
 
-  u32 rc4key[2];
-  u32 rc4data[2];
+  u32  rc4key[2];
+  u32  rc4data[2];
 
 } pdf_t;
 
@@ -830,7 +814,7 @@ typedef struct wpa
 
 } wpa_t;
 
-typedef struct
+typedef struct bitcoin_wallet
 {
   u32 cry_master_buf[64];
   u32 ckey_buf[64];
@@ -842,7 +826,7 @@ typedef struct
 
 } bitcoin_wallet_t;
 
-typedef struct
+typedef struct sip
 {
   u32 salt_buf[30];
   u32 salt_len;
@@ -852,13 +836,13 @@ typedef struct
 
 } sip_t;
 
-typedef struct
+typedef struct androidfde
 {
   u32 data[384];
 
 } androidfde_t;
 
-typedef struct
+typedef struct ikepsk
 {
   u32 nr_buf[16];
   u32 nr_len;
@@ -868,7 +852,7 @@ typedef struct
 
 } ikepsk_t;
 
-typedef struct
+typedef struct netntlm
 {
   u32 user_len;
   u32 domain_len;
@@ -880,7 +864,7 @@ typedef struct
 
 } netntlm_t;
 
-typedef struct
+typedef struct krb5pa
 {
   u32 user[16];
   u32 realm[16];
@@ -890,7 +874,7 @@ typedef struct
 
 } krb5pa_t;
 
-typedef struct
+typedef struct krb5tgs
 {
   u32 account_info[512];
   u32 checksum[4];
@@ -899,7 +883,7 @@ typedef struct
 
 } krb5tgs_t;
 
-typedef struct
+typedef struct tc
 {
   u32 salt_buf[16];
   u32 data_buf[112];
@@ -908,45 +892,45 @@ typedef struct
 
 } tc_t;
 
-typedef struct
+typedef struct pbkdf2_md5
 {
   u32 salt_buf[16];
 
 } pbkdf2_md5_t;
 
-typedef struct
+typedef struct pbkdf2_sha1
 {
   u32 salt_buf[16];
 
 } pbkdf2_sha1_t;
 
-typedef struct
+typedef struct pbkdf2_sha256
 {
   u32 salt_buf[16];
 
 } pbkdf2_sha256_t;
 
-typedef struct
+typedef struct pbkdf2_sha512
 {
   u32 salt_buf[32];
 
 } pbkdf2_sha512_t;
 
-typedef struct
+typedef struct rakp
 {
   u32 salt_buf[128];
   u32 salt_len;
 
 } rakp_t;
 
-typedef struct
+typedef struct cloudkey
 {
   u32 data_len;
   u32 data_buf[512];
 
 } cloudkey_t;
 
-typedef struct
+typedef struct office2007
 {
   u32 encryptedVerifier[4];
   u32 encryptedVerifierHash[5];
@@ -955,21 +939,21 @@ typedef struct
 
 } office2007_t;
 
-typedef struct
+typedef struct office2010
 {
   u32 encryptedVerifier[4];
   u32 encryptedVerifierHash[8];
 
 } office2010_t;
 
-typedef struct
+typedef struct office2013
 {
   u32 encryptedVerifier[4];
   u32 encryptedVerifierHash[8];
 
 } office2013_t;
 
-typedef struct
+typedef struct oldoffice01
 {
   u32 version;
   u32 encryptedVerifier[4];
@@ -978,7 +962,7 @@ typedef struct
 
 } oldoffice01_t;
 
-typedef struct
+typedef struct oldoffice34
 {
   u32 version;
   u32 encryptedVerifier[4];
@@ -987,7 +971,7 @@ typedef struct
 
 } oldoffice34_t;
 
-typedef struct
+typedef struct pstoken
 {
   u32 salt_buf[128];
   u32 salt_len;
@@ -997,7 +981,7 @@ typedef struct
 
 } pstoken_t;
 
-typedef struct
+typedef struct zip2
 {
   u32 type;
   u32 mode;
@@ -1013,13 +997,13 @@ typedef struct
 
 } zip2_t;
 
-typedef struct
+typedef struct win8phone
 {
   u32 salt_buf[32];
 
 } win8phone_t;
 
-typedef struct
+typedef struct keepass
 {
   u32 version;
   u32 algorithm;
@@ -1042,7 +1026,7 @@ typedef struct
 
 } keepass_t;
 
-typedef struct
+typedef struct dpapimk
 {
   u32 version;
   u32 context;
@@ -1054,8 +1038,8 @@ typedef struct
   /* here only for possible
      forward compatibiliy
   */
-  //char cipher_algo[16];
-  //char hash_algo[16];
+  // u8 cipher_algo[16];
+  // u8 hash_algo[16];
 
   u32 iv[4];
   u32 contents_len;
@@ -1063,14 +1047,55 @@ typedef struct
 
 } dpapimk_t;
 
-typedef struct
+typedef struct jks_sha1
+{
+  u32 checksum[5];
+  u32 iv[5];
+  u32 enc_key_buf[4096];
+  u32 enc_key_len;
+  u32 der[5];
+  u32 alias[16];
+
+} jks_sha1_t;
+
+typedef struct ethereum_pbkdf2
+{
+  u32 salt_buf[16];
+  u32 ciphertext[8];
+
+} ethereum_pbkdf2_t;
+
+typedef struct ethereum_scrypt
+{
+  u32 salt_buf[16];
+  u32 ciphertext[8];
+
+} ethereum_scrypt_t;
+
+typedef struct pdf14_tmp
 {
   u32 digest[4];
   u32 out[4];
 
 } pdf14_tmp_t;
 
-typedef struct
+typedef struct luks_tmp
+{
+  u32 ipad32[8];
+  u64 ipad64[8];
+
+  u32 opad32[8];
+  u64 opad64[8];
+
+  u32 dgst32[32];
+  u64 dgst64[16];
+
+  u32 out32[32];
+  u64 out64[16];
+
+} luks_tmp_t;
+
+typedef struct pdf17l8_tmp
 {
   union
   {
@@ -1083,19 +1108,19 @@ typedef struct
 
 } pdf17l8_tmp_t;
 
-typedef struct
+typedef struct phpass_tmp
 {
   u32 digest_buf[4];
 
 } phpass_tmp_t;
 
-typedef struct
+typedef struct md5crypt_tmp
 {
   u32 digest_buf[4];
 
 } md5crypt_tmp_t;
 
-typedef struct
+typedef struct sha256crypt_tmp
 {
   u32 alt_result[8];
 
@@ -1104,16 +1129,16 @@ typedef struct
 
 } sha256crypt_tmp_t;
 
-typedef struct
+typedef struct sha512crypt_tmp
 {
-  u64 l_alt_result[8];
+  u64  l_alt_result[8];
 
-  u64 l_p_bytes[2];
-  u64 l_s_bytes[2];
+  u64  l_p_bytes[2];
+  u64  l_s_bytes[2];
 
 } sha512crypt_tmp_t;
 
-typedef struct
+typedef struct wpa_tmp
 {
   u32 ipad[5];
   u32 opad[5];
@@ -1123,13 +1148,13 @@ typedef struct
 
 } wpa_tmp_t;
 
-typedef struct
+typedef struct bitcoin_wallet_tmp
 {
-  u64 dgst[8];
+  u64  dgst[8];
 
 } bitcoin_wallet_tmp_t;
 
-typedef struct
+typedef struct dcc2_tmp
 {
   u32 ipad[5];
   u32 opad[5];
@@ -1139,7 +1164,7 @@ typedef struct
 
 } dcc2_tmp_t;
 
-typedef struct
+typedef struct bcrypt_tmp
 {
   u32 E[18];
 
@@ -1152,7 +1177,7 @@ typedef struct
 
 } bcrypt_tmp_t;
 
-typedef struct
+typedef struct pwsafe2_tmp
 {
   u32 digest[2];
 
@@ -1165,19 +1190,19 @@ typedef struct
 
 } pwsafe2_tmp_t;
 
-typedef struct
+typedef struct pwsafe3_tmp
 {
   u32 digest_buf[8];
 
 } pwsafe3_tmp_t;
 
-typedef struct
+typedef struct androidpin_tmp
 {
   u32 digest_buf[5];
 
 } androidpin_tmp_t;
 
-typedef struct
+typedef struct androidfde_tmp
 {
   u32 ipad[5];
   u32 opad[5];
@@ -1187,7 +1212,7 @@ typedef struct
 
 } androidfde_tmp_t;
 
-typedef struct
+typedef struct tc_tmp
 {
   u32 ipad[16];
   u32 opad[16];
@@ -1197,17 +1222,17 @@ typedef struct
 
 } tc_tmp_t;
 
-typedef struct
+typedef struct tc64_tmp
 {
-  u64 ipad[8];
-  u64 opad[8];
+  u64  ipad[8];
+  u64  opad[8];
 
-  u64 dgst[32];
-  u64 out[32];
+  u64  dgst[32];
+  u64  out[32];
 
 } tc64_tmp_t;
 
-typedef struct
+typedef struct pbkdf1_sha1_tmp
 {
   // pbkdf1-sha1 is limited to 160 bits
 
@@ -1218,63 +1243,63 @@ typedef struct
 
 } pbkdf1_sha1_tmp_t;
 
-typedef struct
+typedef struct pbkdf2_md5_tmp
 {
-  u32 ipad[4];
-  u32 opad[4];
+  u32  ipad[4];
+  u32  opad[4];
 
-  u32 dgst[32];
-  u32 out[32];
+  u32  dgst[32];
+  u32  out[32];
 
 } pbkdf2_md5_tmp_t;
 
-typedef struct
+typedef struct pbkdf2_sha1_tmp
 {
-  u32 ipad[5];
-  u32 opad[5];
+  u32  ipad[5];
+  u32  opad[5];
 
-  u32 dgst[32];
-  u32 out[32];
+  u32  dgst[32];
+  u32  out[32];
 
 } pbkdf2_sha1_tmp_t;
 
-typedef struct
+typedef struct pbkdf2_sha256_tmp
 {
-  u32 ipad[8];
-  u32 opad[8];
+  u32  ipad[8];
+  u32  opad[8];
 
-  u32 dgst[32];
-  u32 out[32];
+  u32  dgst[32];
+  u32  out[32];
 
 } pbkdf2_sha256_tmp_t;
 
-typedef struct
+typedef struct pbkdf2_sha512_tmp
 {
-  u64 ipad[8];
-  u64 opad[8];
+  u64  ipad[8];
+  u64  opad[8];
 
-  u64 dgst[16];
-  u64 out[16];
+  u64  dgst[16];
+  u64  out[16];
 
 } pbkdf2_sha512_tmp_t;
 
-typedef struct
+typedef struct ecryptfs_tmp
 {
-  u64 out[8];
+  u64  out[8];
 
 } ecryptfs_tmp_t;
 
-typedef struct
+typedef struct oraclet_tmp
 {
-  u64 ipad[8];
-  u64 opad[8];
+  u64  ipad[8];
+  u64  opad[8];
 
-  u64 dgst[16];
-  u64 out[16];
+  u64  dgst[16];
+  u64  out[16];
 
 } oraclet_tmp_t;
 
-typedef struct
+typedef struct agilekey_tmp
 {
   u32 ipad[5];
   u32 opad[5];
@@ -1284,7 +1309,7 @@ typedef struct
 
 } agilekey_tmp_t;
 
-typedef struct
+typedef struct mywallet_tmp
 {
   u32 ipad[5];
   u32 opad[5];
@@ -1297,7 +1322,7 @@ typedef struct
 
 } mywallet_tmp_t;
 
-typedef struct
+typedef struct sha1aix_tmp
 {
   u32 ipad[5];
   u32 opad[5];
@@ -1307,7 +1332,7 @@ typedef struct
 
 } sha1aix_tmp_t;
 
-typedef struct
+typedef struct sha256aix_tmp
 {
   u32 ipad[8];
   u32 opad[8];
@@ -1317,17 +1342,17 @@ typedef struct
 
 } sha256aix_tmp_t;
 
-typedef struct
+typedef struct sha512aix_tmp
 {
-  u64 ipad[8];
-  u64 opad[8];
+  u64  ipad[8];
+  u64  opad[8];
 
-  u64 dgst[8];
-  u64 out[8];
+  u64  dgst[8];
+  u64  out[8];
 
 } sha512aix_tmp_t;
 
-typedef struct
+typedef struct lastpass_tmp
 {
   u32 ipad[8];
   u32 opad[8];
@@ -1337,13 +1362,13 @@ typedef struct
 
 } lastpass_tmp_t;
 
-typedef struct
+typedef struct drupal7_tmp
 {
-  u64 digest_buf[8];
+  u64  digest_buf[8];
 
 } drupal7_tmp_t;
 
-typedef struct
+typedef struct lotus8_tmp
 {
   u32 ipad[5];
   u32 opad[5];
@@ -1353,31 +1378,31 @@ typedef struct
 
 } lotus8_tmp_t;
 
-typedef struct
+typedef struct office2007_tmp
 {
   u32 out[5];
 
 } office2007_tmp_t;
 
-typedef struct
+typedef struct office2010_tmp
 {
   u32 out[5];
 
 } office2010_tmp_t;
 
-typedef struct
+typedef struct office2013_tmp
 {
-  u64 out[8];
+  u64  out[8];
 
 } office2013_tmp_t;
 
-typedef struct
+typedef struct saph_sha1_tmp
 {
   u32 digest_buf[5];
 
 } saph_sha1_tmp_t;
 
-typedef struct
+typedef struct seven_zip_tmp
 {
   u32 block[16];
 
@@ -1388,7 +1413,7 @@ typedef struct
 
 } seven_zip_tmp_t;
 
-typedef struct
+typedef struct axcrypt_tmp
 {
   u32 KEK[4];
   u32 lsb[4];
@@ -1396,13 +1421,13 @@ typedef struct
 
 } axcrypt_tmp_t;
 
-typedef struct
+typedef struct keepass_tmp
 {
   u32 tmp_digest[8];
 
 } keepass_tmp_t;
 
-typedef struct
+typedef struct dpapimk_tmp
 {
   /* dedicated to hmac-sha1 */
   u32 ipad[5];
@@ -1420,7 +1445,7 @@ typedef struct
 
 } dpapimk_tmp_t;
 
-typedef struct
+typedef struct bsdicrypt_tmp
 {
   u32 Kc[16];
   u32 Kd[16];
@@ -1429,7 +1454,7 @@ typedef struct
 
 } bsdicrypt_tmp_t;
 
-typedef struct
+typedef struct rar3_tmp
 {
   u32 dgst[17][5];
 
@@ -1443,7 +1468,7 @@ typedef struct
 
 } seven_zip_hook_t;
 
-typedef struct
+typedef struct cram_md5
 {
   u32 user[16];
 
@@ -1527,4 +1552,3 @@ typedef enum combinator_mode
   COMBINATOR_MODE_BASE_RIGHT = 10002
 
 } combinator_mode_t;
-
